@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7
+FROM registry.access.redhat.com/openshift3/jenkins-agent-maven-35-rhel7:v3.10
 
 MAINTAINER Siamak Sadeghianfar <ssadeghi@redhat.com>
 
