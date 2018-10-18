@@ -21,7 +21,7 @@ plugins {
 
 sonarqube {
     properties {
-        property 'sonar.projectName', 'Example of SonarQube Scanner for Gradle Usage'
+        property 'sonar.projectName', 'Inventory Service Gradle SonarQube Scanner'
     }
 }
 
@@ -51,19 +51,8 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
-task count {
-    doLast {
-        4.times { print "$it " }
-    }
-}
-
 task getVersion {
 	doLast {
         println version
     }
 }
-
-
-//  ./gradlew sonarqube -Dsonar.host.url=http://sonarqube-lab-infra.apps.istio.openshiftworkshop.com -Dsonar.login=f7d35ff77556cdf83fc0b78311201c4a2dd7227b
-
-// curl -v -u admin:admin123 --upload-file ./build/libs/inventory-0.0.1-SNAPSHOT.jar http://nexus-lab-infra.apps.istio.openshiftworkshop.com/repository/maven-snapshots/com/redhat/cloudnative/inventory/0.0.1-SNAPSHOT/inventory-0.0.1-SNAPSHOT.jar
