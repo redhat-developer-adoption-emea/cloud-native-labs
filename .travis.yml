@@ -15,6 +15,7 @@ env:
   - BUILD_CMD="mvn -f solutions/all/catalog-spring-boot package"
   - BUILD_CMD="mvn -f solutions/all/gateway-vertx package"
   - BUILD_CMD="mvn -f solutions/all/inventory-wildfly-swarm package"
+  - BUILD_CMD="./inventory-spring-boot-gradle/gradlew -p ./inventory-spring-boot-gradle/ build --no-daemon"
 
 script:
   - $BUILD_CMD
