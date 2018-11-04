@@ -17,7 +17,7 @@ app.get('/sys/info/ping', function(req, res, next) {
   res.end('"OK"');
 });
 
-const port = process.env.FH_PORT || process.env.OPENSHIFT_NODEJS_PORT || 8111;
+const port = process.env.FH_PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 const host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 const server = app.listen(port, host, function() {
   console.log("App started at: " + new Date() + " on port: " + port);
