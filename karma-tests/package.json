@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "node .",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "build": "npx ng build",
+    "test": "npx ng test",
+    "lint": "npx ng lint",
+    "e2e": "npx ng e2e"
   },
   "main": "application.js",
   "private": true,
