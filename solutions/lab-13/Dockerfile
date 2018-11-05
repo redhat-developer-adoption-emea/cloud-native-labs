@@ -14,4 +14,5 @@ RUN yum install -y google-chrome-stable
 
 USER 1001
 
-RUN npm install -g @angular/cli@latest
+
+RUN mkdir ~/.npm-global && npm config set prefix '~/.npm-global' && npm install -g @angular/cli@latest
