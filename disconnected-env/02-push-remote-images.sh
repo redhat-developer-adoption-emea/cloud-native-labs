@@ -14,8 +14,16 @@ echo "You need to log as admin in your Openshift cluster first..."
 exit 1
 fi
 
+## Troubleshooting
+# $ openssl s_client -showcerts -verify 5 -connect docker-registry-default.apps.serverless-ccf7.openshiftworkshop.com:443 < /dev/null
+# Copy last CERT content to a file 'ca.crt', then copy that file to /etc/pki/ca-trust/source/anchors/
+# $ cp ca.crt /etc/pki/ca-trust/source/anchors/
+# $ update-ca-trust extract
+# Restart docker 
+# $ systemctl restart docker
+
 export REGISTRY_URL=$(oc get routes -n default | grep docker-registry | awk '{print $2}')
-docker login $REGISTRY_URL -u admin -p $(oc whoami -t)
+docker login $REGISTRY_URL -u $(oc whoami) -p $(oc whoami -t)
 
 IMAGE_LIST=$(cat ${FROM_IMAGE_STREAM}.yaml | yq -r ".spec.tags[] | .from.name")
 
