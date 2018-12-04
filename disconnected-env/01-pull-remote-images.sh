@@ -5,7 +5,7 @@
 
 # WATCH OUT! >>> brew install python-yq
 
-IMAGE_LIST=$(cat ${FROM_IMAGE_STREAM}.yaml | yq -r ".spec.tags[] | .from.name")
+IMAGE_LIST=$(cat ${FROM_IMAGE_STREAM_FILE}.yaml | yq -r ".spec.tags[] | .from.name")
 
 declare -a arr=(${IMAGE_LIST})
 
