@@ -3,7 +3,7 @@
 # Environment
 . ./00-environment.sh
 
-# WATCH OUT! 
+# WATCH OUT!
 # >>> brew install python-yq
 # >>> curl -OL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && mv jq-linux64 jq && export PATH=$PATH:.
 
@@ -21,8 +21,10 @@ fi
 # Copy last CERT content to a file 'ca.crt', then copy that file to /etc/pki/ca-trust/source/anchors/
 # $ cp ca.crt /etc/pki/ca-trust/source/anchors/
 # $ update-ca-trust extract
-# Restart docker 
+# Restart docker
 # $ systemctl restart docker
+
+oc new-project ${TO_NAMESPACE}
 
 export REGISTRY_URL=$(oc get routes -n default | grep docker-registry | awk '{print $2}')
 docker login $REGISTRY_URL -u $(oc whoami) -p $(oc whoami -t)

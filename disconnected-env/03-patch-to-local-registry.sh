@@ -6,3 +6,5 @@
 # WATCH OUT! >>> brew install python-yq
 
 sed "s@name: ${FROM_REGISTRY}@name: ${TO_REGISTRY}@g" ${FROM_IMAGE_STREAM_FILE}.yaml > ${TO_IMAGE_STREAM_FILE}.yaml
+
+oc -n ${TO_NAMESPACE} create -f ${TO_IMAGE_STREAM_FILE}.yaml
