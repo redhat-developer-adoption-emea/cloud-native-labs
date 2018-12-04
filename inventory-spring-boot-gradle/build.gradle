@@ -53,6 +53,119 @@ dependencies {
 
 task getVersion {
 	doLast {
-        println version
+        println rootProject.name + '-' + version
     }
+}
+
+task project(type:Exec) {
+	group 'openshift'
+    description 'Gets current project'
+	try { 
+		executable "sh"
+  		args "-c", "oc project"
+	} catch(Exception e) {
+		println e.getMessage()
+	}
+	
+	doLast {
+        println 'Execution was ' + (execResult.getExitValue() == 0 ? 'successfull!' : 'a failure!')
+    }
+}
+
+task newProject(type:Exec) {
+	group 'openshift'
+    description 'Creates a project'
+	ignoreExitValue true
+	try { 
+		executable "sh"
+  		args "-c", "oc new-project cva-tests"
+	} catch(Exception e) {
+		println e.getMessage()
+	}
+	
+	doLast {
+        println 'Execution was ' + (execResult.getExitValue() == 0 ? 'successfull!' : 'a failure!')
+    }
+}
+
+task newBuild(type:Exec) {
+	group 'openshift'
+    description 'Creates a new binary Java build'
+	ignoreExitValue true
+	try { 
+		executable "sh"
+  		args "-c", "oc new-build --name=${rootProject.name} openshift/redhat-openjdk18-openshift:1.4 --binary=true"
+	} catch(Exception e) {
+		println e.getMessage()
+	}
+	
+	doLast {
+        println 'Execution was ' + (execResult.getExitValue() == 0 ? 'successfull!' : 'a failure!')
+    }
+}
+
+task startBuild(type:Exec) {
+	group 'openshift'
+    description 'Starts a new binary Java build'
+	ignoreExitValue true
+	try { 
+		executable "sh"
+  		args "-c", "oc start-build ${rootProject.name} --from-file=./build/libs/${rootProject.name}-${version}.jar --follow"
+	} catch(Exception e) {
+		println e.getMessage()
+	}
+	
+	doLast {
+        println 'Execution was ' + (execResult.getExitValue() == 0 ? 'successfull!' : 'a failure!')
+    }
+}
+
+task newApp(type:Exec) {
+	group 'openshift'
+    description 'Creates a app from an image stream'
+	ignoreExitValue true
+	try { 
+		executable "sh"
+  		args "-c", "oc new-app ${rootProject.name}:latest"
+	} catch(Exception e) {
+		println e.getMessage()
+	}
+	
+	doLast {
+        println 'Execution was ' + (execResult.getExitValue() == 0 ? 'successfull!' : 'a failure!')
+    }
+}
+
+task exposeApp(type:Exec) {
+	group 'openshift'
+    description 'Exposes a app from an image stream'
+	ignoreExitValue true
+	
+	try { 
+		executable "sh"
+  		args "-c", "oc expose svc ${rootProject.name}"
+	} catch(Exception e) {
+		println e.getMessage()
+	}
+	
+	doLast {
+        println 'Execution was ' + (execResult.getExitValue() == 0 ? 'successfull!' : 'a failure!')
+    }
+}
+
+task deploy {
+	group 'openshift'
+    description 'Deploys the app to Openshift current project'
+	
+	dependsOn 'clean'
+    dependsOn 'build'
+	dependsOn 'newBuild'
+	dependsOn 'startBuild'
+	dependsOn 'newApp'
+	dependsOn 'exposeApp'
+    tasks.findByName('build').mustRunAfter 'clean'
+    tasks.findByName('newBuild').mustRunAfter 'build'
+	tasks.findByName('startBuild').mustRunAfter 'newBuild'
+	tasks.findByName('newApp').mustRunAfter 'startBuild'
+	tasks.findByName('exposeApp').mustRunAfter 'newApp'
 }
