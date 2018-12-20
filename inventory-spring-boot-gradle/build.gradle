@@ -94,7 +94,7 @@ task newBuild(type:Exec) {
 	ignoreExitValue true
 	try { 
 		executable "sh"
-  		args "-c", "oc new-build --name=${rootProject.name} openshift/redhat-openjdk18-openshift:1.4 --binary=true"
+  		args "-c", "oc new-build --name=${rootProject.name} ${s2iImage} --binary=true"
 	} catch(Exception e) {
 		println e.getMessage()
 	}
