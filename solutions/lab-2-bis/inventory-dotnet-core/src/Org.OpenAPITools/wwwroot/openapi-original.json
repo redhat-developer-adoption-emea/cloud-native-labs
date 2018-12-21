@@ -1,0 +1,105 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "title" : "inventory",
+    "description" : "API to manage an inventory",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "paths" : {
+    "/api/inventory" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "All elements are returned as an arry of InventoryItems",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/InventoryItem"
+                  }
+                },
+                "examples" : {
+                  "AllItems" : {
+                    "value" : "[{\"itemId\":\"329299\",\"quantity\":35},{\"itemId\":\"329199\",\"quantity\":12},{\"itemId\":\"165613\",\"quantity\":45},{\"itemId\":\"165614\",\"quantity\":87},{\"itemId\":\"165954\",\"quantity\":43},{\"itemId\":\"444434\",\"quantity\":32},{\"itemId\":\"444435\",\"quantity\":53}]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/inventory/{itemId}" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "itemId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Should return the item for the id provided",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InventoryItem"
+                },
+                "examples" : {
+                  "OneItem" : {
+                    "value" : "{\"itemId\":\"329299\",\"quantity\":35}"
+                  },
+                  "OtherExample" : {
+                    "value" : "{\"itemId\":\"444435\",\"quantity\":53}"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                },
+                "examples" : {
+                  "Empty" : {
+                    "value" : "{}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "InventoryItem" : {
+        "title" : "Root Type for InventoryItem",
+        "type" : "object",
+        "properties" : {
+          "itemId" : {
+            "type" : "string"
+          },
+          "quantity" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "description" : "The root of the InventoryItem type's schema.",
+        "example" : "{\"itemId\":\"329299\",\"quantity\":35}"
+      }
+    }
+  }
+}
