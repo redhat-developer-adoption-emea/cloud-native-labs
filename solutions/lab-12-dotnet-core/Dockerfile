@@ -23,14 +23,19 @@ ENV DOTNET_CORE_VERSION=2.2 \
 
 COPY contrib/bin/scl_enable /usr/local/bin/scl_enable
 
+#USER root
+
+RUN yum install -y centos-release-dotnet centos-release-scl-rh
+RUN yum install -y --setopt=tsflags=nodocs scl-utils rh-dotnet22 rh-nodejs8-npm
+
 # Install
-RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
-    INSTALL_PKGS="rh-dotnet22 rh-nodejs8-npm" && \
-    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all -y && \
-# yum cache files may still exist (and quite large in size)
-    rm -rf /var/cache/yum/*
+#RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
+#    INSTALL_PKGS="rh-dotnet22 rh-nodejs8-npm" && \
+#    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
+#    rpm -V $INSTALL_PKGS && \
+#    yum clean all -y && \
+## yum cache files may still exist (and quite large in size)
+#    rm -rf /var/cache/yum/*
 
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME
