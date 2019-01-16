@@ -21,7 +21,8 @@ ENV DOTNET_CORE_VERSION=2.1 \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 \
     DOTNET_SONARQUBE_PLUGIN_VERSION="4.5.0.1761" \
-    DOTNET_SONARQUBE_PLUGIN_URL="https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${DOTNET_SONARQUBE_PLUGIN_VERSION}/sonar-scanner-msbuild-${DOTNET_SONARQUBE_PLUGIN_VERSION}-netcoreapp2.0.zip"
+    DOTNET_SONARQUBE_PLUGIN_URL="https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${DOTNET_SONARQUBE_PLUGIN_VERSION}/sonar-scanner-msbuild-${DOTNET_SONARQUBE_PLUGIN_VERSION}-netcoreapp2.0.zip" \
+    PATH=$PATH:/home/jenkins/.dotnet/tools
 
 COPY contrib/bin/scl_enable /usr/local/bin/scl_enable
 
