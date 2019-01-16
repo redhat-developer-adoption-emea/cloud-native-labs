@@ -36,13 +36,13 @@ RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
 
 # Installing Sonarqube plugin
 RUN source /usr/local/bin/scl_enable && env && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
-RUN echo "HOME: $HOME"
+
 # Fix permissions...
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME && \
     chmod a+x /home/jenkins/.dotnet/tools/*
 
-RUN echo $'# jajaja\nexport PATH="$PATH:/home/jenkins/.dotnet/tools"' >> /etc/profile
+#RUN echo $'# jajaja\nexport PATH="$PATH:/home/jenkins/.dotnet/tools"' >> /etc/profile
 
 USER 1001
 RUN id
