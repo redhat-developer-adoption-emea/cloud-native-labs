@@ -42,7 +42,9 @@ RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME && \
     chmod a+x $HOME/.dotnet/tools/*
 
+RUN echo $'# jajaja\nexport PATH="$PATH:/jenkins/.dotnet/tools"' >> /etc/profile
+
 USER 1001
 RUN id
-RUN echo $'# jajaja\nexport PATH="$PATH:/jenkins/.dotnet/tools"' >> ~/.bash_profile
+
 
