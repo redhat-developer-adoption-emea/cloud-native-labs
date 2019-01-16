@@ -35,12 +35,12 @@ RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
     rm -rf /var/cache/yum/*    
 
 # Installing Sonarqube plugin
-RUN source /usr/local/bin/scl_enable && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
+RUN source /usr/local/bin/scl_enable && env && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
 RUN echo "HOME: $HOME"
 # Fix permissions...
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME && \
-    chmod u+x $HOME/.dotnet/tools/*
+    chmod a+x $HOME/.dotnet/tools/*
 
 USER 1001
 RUN id
