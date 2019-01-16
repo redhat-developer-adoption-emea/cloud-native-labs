@@ -37,7 +37,7 @@ RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
 # Installing Sonarqube plugin
 RUN source /usr/local/bin/scl_enable && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
 
-RUN echo $'export PATH="$PATH:/root/.dotnet/tools"' >> ~/.bash_profile
+RUN echo $'export PATH="$PATH:~/.dotnet/tools"' >> ~/.bash_profile
 
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME
