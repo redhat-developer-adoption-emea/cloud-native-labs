@@ -19,7 +19,9 @@ ENV DOTNET_CORE_VERSION=2.1 \
     PROMPT_COMMAND=". /usr/local/bin/scl_enable" \
     ENABLED_COLLECTIONS="rh-nodejs8 rh-dotnet21" \
     NUGET_XMLDOC_MODE=skip \
-    DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 \
+    DOTNET_SONARQUBE_PLUGIN_VERSION="4.5.0.1761" \
+    DOTNET_SONARQUBE_PLUGIN_URL="https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${DOTNET_SONARQUBE_PLUGIN_VERSION}/sonar-scanner-msbuild-${DOTNET_SONARQUBE_PLUGIN_VERSION}-netcoreapp2.0.zip"
 
 COPY contrib/bin/scl_enable /usr/local/bin/scl_enable
 
@@ -30,9 +32,12 @@ RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
     rpm -V $INSTALL_PKGS && \
     yum clean all -y && \
 # yum cache files may still exist (and quite large in size)
-    rm -rf /var/cache/yum/*
+    rm -rf /var/cache/yum/*    
 
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME
+
+# Installing Sonarqube plugin
+RUN source /usr/local/bin/scl_enable && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
 
 USER 1001
