@@ -39,7 +39,7 @@ RUN source /usr/local/bin/scl_enable && dotnet tool install --global dotnet-sona
 RUN echo "HOME: $HOME"
 # Fix permissions...
 RUN chown -R 1001:0 $HOME && \
-    chmod -R g+rw $HOME \
+    chmod -R g+rw $HOME && \
     chmod u+x $HOME/.dotnet/tools/*
 
 USER 1001
