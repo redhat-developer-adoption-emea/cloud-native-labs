@@ -43,5 +43,5 @@ RUN chown -R 1001:0 $HOME && \
 
 USER 1001
 RUN id
-RUN echo $'# jajaja\nexport PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.bash_profile
+RUN echo $'# jajaja\nexport PATH="$PATH:/jenkins/.dotnet/tools"' >> ~/.bash_profile
 
