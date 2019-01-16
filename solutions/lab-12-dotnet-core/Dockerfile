@@ -34,11 +34,10 @@ RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
 # yum cache files may still exist (and quite large in size)
     rm -rf /var/cache/yum/*    
 
-# Installing Sonarqube plugin
-RUN source /usr/local/bin/scl_enable && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
-
-
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME
 
 USER 1001
+
+# Installing Sonarqube plugin
+RUN source /usr/local/bin/scl_enable && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
