@@ -27,6 +27,12 @@ ENV DOTNET_CORE_VERSION=2.1 \
 COPY contrib/bin/scl_enable /usr/local/bin/scl_enable
 
 # Install
+RUN INSTALL_PKGS="java-1.8.0-openjdk-devel.x86_64" && \
+    x86_EXTRA_RPMS=$(if [ "$(uname -m)" == "x86_64" ]; then echo -n java-1.8.0-openjdk-devel.i686 ; fi) && \
+    yum install -y centos-release-scl-rh && \
+    yum install -y --enablerepo=centosplus $INSTALL_PKGS $x86_EXTRA_RPMS && \
+    rpm -V java-1.8.0-openjdk-devel.x86_64 $x86_EXTRA_RPMS
+
 RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
     INSTALL_PKGS="rh-dotnet21 rh-nodejs8-npm" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
@@ -42,8 +48,6 @@ RUN source /usr/local/bin/scl_enable && env && dotnet tool install --global dotn
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME && \
     chmod a+x /home/jenkins/.dotnet/tools/*
-
-#RUN echo $'# jajaja\nexport PATH="$PATH:/home/jenkins/.dotnet/tools"' >> /etc/profile
 
 USER 1001
 RUN id
