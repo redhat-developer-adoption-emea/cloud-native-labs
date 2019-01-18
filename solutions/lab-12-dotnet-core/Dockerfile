@@ -20,9 +20,10 @@ ENV DOTNET_CORE_VERSION=2.1 \
     ENABLED_COLLECTIONS="rh-nodejs8 rh-dotnet21" \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 \
-    DOTNET_SONARQUBE_PLUGIN_VERSION="4.5.0.1761" \
-    DOTNET_SONARQUBE_PLUGIN_URL="https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${DOTNET_SONARQUBE_PLUGIN_VERSION}/sonar-scanner-msbuild-${DOTNET_SONARQUBE_PLUGIN_VERSION}-netcoreapp2.0.zip" \
-    PATH=$PATH:/home/jenkins/.dotnet/tools
+    SONAR_SCANNER_MSBUILD_VERSION=4.3.1.1372 \
+    SONAR_SCANNER_VERSION=3.2.0.1227 \
+    SONAR_SCANNER_MSBUILD_HOME=/opt/sonar-scanner-msbuild \
+    PATH="$SONAR_SCANNER_MSBUILD_HOME:$SONAR_SCANNER_MSBUILD_HOME/sonar-scanner-$SONAR_SCANNER_VERSION/bin:${PATH}"
 
 COPY contrib/bin/scl_enable /usr/local/bin/scl_enable
 
@@ -41,17 +42,24 @@ RUN yum install -y centos-release-dotnet centos-release-scl-rh && \
 # yum cache files may still exist (and quite large in size)
     rm -rf /var/cache/yum/*    
 
-USER root 
+# Installing mono
+# https://www.mono-project.com/download/stable/#download-lin-centos
+RUN rpm --import "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF" && \
+    curl https://download.mono-project.com/repo/centos7-stable.repo | tee /etc/yum.repos.d/mono-centos7-stable.repo && \
+    yum install -y mono-complete
 
 # Installing Sonarqube plugin
-RUN id && source /usr/local/bin/scl_enable && env && dotnet tool install --global dotnet-sonarscanner --version 4.5.0
-
-RUN chmod +x /home/jenkins/.dotnet/tools/.store/dotnet-sonarscanner/4.5.0/dotnet-sonarscanner/4.5.0/tools/netcoreapp2.1/any/*.dll
+RUN wget https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/$SONAR_SCANNER_MSBUILD_VERSION/sonar-scanner-msbuild-$SONAR_SCANNER_MSBUILD_VERSION-net46.zip -O /opt/sonar-scanner-msbuild.zip && \
+    mkdir -p $SONAR_SCANNER_MSBUILD_HOME && \
+    unzip /opt/sonar-scanner-msbuild.zip -d $SONAR_SCANNER_MSBUILD_HOME && \
+    rm /opt/sonar-scanner-msbuild.zip && \
+    chmod 775 $SONAR_SCANNER_MSBUILD_HOME/*.exe && \
+    chmod 775 $SONAR_SCANNER_MSBUILD_HOME/**/bin/* && \
+    chmod 775 $SONAR_SCANNER_MSBUILD_HOME/**/lib/*.jar
 
 # Fix permissions...
 RUN id && chown -R 1001:0 $HOME && \
-    chmod -R g+rw $HOME && \
-    chmod a+x /home/jenkins/.dotnet/tools/*
+    chmod -R g+rw $HOME
 
 USER 1001
 RUN id
