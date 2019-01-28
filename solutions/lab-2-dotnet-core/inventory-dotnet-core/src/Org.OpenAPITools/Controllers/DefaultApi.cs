@@ -1,7 +1,7 @@
 /*
- * inventory
+ * Inventory API
  *
- * API to manage an inventory
+ * Inventory API for the Cloud Native Workshop
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -18,6 +18,8 @@ using System.ComponentModel.DataAnnotations;
 using Org.OpenAPITools.Attributes;
 using Org.OpenAPITools.Models;
 
+using Prometheus;
+
 namespace Org.OpenAPITools.Controllers
 { 
     /// <summary>
@@ -25,17 +27,28 @@ namespace Org.OpenAPITools.Controllers
     /// </summary>
     public class DefaultApiController : ControllerBase
     { 
+        private Counter apiHttpRequestsTotalCounter;
+
+        public DefaultApiController()
+        {
+            apiHttpRequestsTotalCounter = Metrics.CreateCounter("api_http_requests_total", "Counts get ...", new CounterConfiguration {
+                LabelNames = new[] { "api", "method", "endpoint" }
+            });
+        }
         /// <summary>
         /// 
         /// </summary>
-        /// <response code="200">All elements are returned as an arry of InventoryItems</response>
+        /// <remarks>Should return all elements as an arry of InventoryItems or an empty array if there are none.</remarks>
+        /// <response code="200">Should return an arry of InventoryItems</response>
         [HttpGet]
         [Route("/api/inventory")]
         [ValidateModelState]
         [SwaggerOperation("ApiInventoryGet")]
-        [SwaggerResponse(statusCode: 200, type: typeof(List<InventoryItem>), description: "All elements are returned as an arry of InventoryItems")]
+        [SwaggerResponse(statusCode: 200, type: typeof(List<InventoryItem>), description: "Should return an arry of InventoryItems")]
         public virtual IActionResult ApiInventoryGet()
         { 
+            apiHttpRequestsTotalCounter.WithLabels("inventory", "GET", "/api/inventory").Inc();
+
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(List<InventoryItem>));
 
@@ -52,25 +65,27 @@ namespace Org.OpenAPITools.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Returns the item for the id provided or an error</remarks>
         /// <param name="itemId"></param>
         /// <response code="200">Should return the item for the id provided</response>
-        /// <response code="404">Not found</response>
+        /// <response code="404">Item not found</response>
         [HttpGet]
         [Route("/api/inventory/{itemId}")]
         [ValidateModelState]
         [SwaggerOperation("ApiInventoryItemIdGet")]
         [SwaggerResponse(statusCode: 200, type: typeof(InventoryItem), description: "Should return the item for the id provided")]
-        [SwaggerResponse(statusCode: 404, type: typeof(string), description: "Not found")]
+        [SwaggerResponse(statusCode: 404, type: typeof(GenericError), description: "Item not found")]
         public virtual IActionResult ApiInventoryItemIdGet([FromRoute][Required]string itemId)
         { 
+            apiHttpRequestsTotalCounter.WithLabels("inventory", "GET", "/api/inventory/{itemId}").Inc();
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(InventoryItem));
 
             //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404, default(string));
+            // return StatusCode(404, default(GenericError));
 
             string exampleJson = null;
-            exampleJson = "{\"itemId\":\"444435\",\"quantity\":53}";
+            exampleJson = "{\"itemId\":\"329299\",\"quantity\":35}";
             
             var example = exampleJson != null
             ? JsonConvert.DeserializeObject<InventoryItem>(exampleJson)

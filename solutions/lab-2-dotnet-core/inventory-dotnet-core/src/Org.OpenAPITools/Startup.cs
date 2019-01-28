@@ -1,7 +1,7 @@
 /*
- * inventory
+ * Inventory API
  *
- * API to manage an inventory
+ * Inventory API for the Cloud Native Workshop
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -21,6 +21,7 @@ using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Org.OpenAPITools.Filters;
+using Prometheus;
 
 namespace Org.OpenAPITools
 {
@@ -95,6 +96,8 @@ namespace Org.OpenAPITools
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseHttpsRedirection();
+            app.UseMetricServer();
+
             app
                 .UseMvc()
                 .UseDefaultFiles()
@@ -112,7 +115,7 @@ namespace Org.OpenAPITools
                     // c.SwaggerEndpoint("/openapi-original.json", "inventory Original");
                 });
 
-if (env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
